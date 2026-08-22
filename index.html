@@ -215,7 +215,7 @@ textarea::placeholder{color:var(--text3)}
 </div>
 
 <script>
-const API = "https://reconvene-crease-skintight.ngrok-free.dev/v1/chat/completions";
+const API = "https://reconvene-crease-skintight.ngrok-free.dev/v1";
 let model = "mlabonne_qwen3-8b-abliterated:2";
 let streaming = false;
 
@@ -381,12 +381,23 @@ async function send() {
       headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true","Accept":"application/json"},
       body:JSON.stringify({ model, messages:sess.messages, stream:true, temperature:0.7 })
     });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status}: ${errText}`);
+    }
+
     const reader = res.body.getReader();
     const dec = new TextDecoder();
+    let buf = "";
     while (true) {
       const {value, done} = await reader.read();
+      if (value) buf += dec.decode(value, {stream:true});
       if (done) break;
-      for (const line of dec.decode(value).split("\n")) {
+
+      const lines = buf.split("\n");
+      buf = lines.pop(); // keep last (possibly partial) line for next chunk
+
+      for (const line of lines) {
         if (!line.startsWith("data:")) continue;
         const d = line.slice(5).trim();
         if (d === "[DONE]") continue;
@@ -441,11 +452,11 @@ async function loadModel() {
   try {
     const r = await fetch(API + "/chat/completions", {
       method:"POST", headers,
-      body:JSON.stringify({ messages:[{role:"user",content:"hi"}], max_tokens:1, stream:false })
+      body:JSON.stringify({ model, messages:[{role:"user",content:"hi"}], max_tokens:1, stream:false })
     });
     if (r.ok) {
       const d = await r.json();
-      const id = d.model || (d.choices?.[0]?.message && model);
+      const id = d.model || model;
       if (id) { model = id; mnameEl.textContent = model; return; }
     }
   } catch {}
