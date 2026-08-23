@@ -376,10 +376,26 @@ async function send() {
   let full = "";
 
   try {
-    const res = await fetch(API + "/chat/completions", {
+   const res = await fetch(API + "/chat/completions", {
       method:"POST",
-      headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true","Accept":"application/json"},
-      body:JSON.stringify({ model, messages:sess.messages, stream:true, temperature:0.7 })
+      headers:{
+        "Content-Type":"application/json",
+        "ngrok-skip-browser-warning":"true",
+        "Accept":"application/json",
+        "Authorization": "Bearer sk-lm-W334QBGw:kNmyetax26bFWiY8tLUB"
+      },
+      body:JSON.stringify({ 
+        model, 
+        messages:sess.messages, 
+        stream:true, 
+        temperature:0.7,
+        integrations: [
+          { 
+            "type": "plugin", 
+            "id": "gregg/web-search" 
+          }
+        ]
+      })
     });
     const reader = res.body.getReader();
     const dec = new TextDecoder();
@@ -427,7 +443,12 @@ async function send() {
 async function loadModel() {
   const mnameEl = document.getElementById("mname");
   const mdotEl  = document.getElementById("mdot");
-  const headers = {"Content-Type":"application/json","ngrok-skip-browser-warning":"true","Accept":"application/json"};
+  const headers = {
+    "Content-Type":"application/json",
+    "ngrok-skip-browser-warning":"true",
+    "Accept":"application/json",
+    "Authorization": "Bearer sk-lm-W334QBGw:kNmyetax26bFWiY8tLUB"
+  };;
 
   try {
     const r = await fetch(API + "/models", { headers });
