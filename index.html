@@ -376,7 +376,7 @@ async function send() {
   let full = "";
 
   try {
-   const res = await fetch(API + "/chat/completions", {
+   const res = await fetch(API + "/responses", {
       method:"POST",
       headers:{
         "Content-Type":"application/json",
