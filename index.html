@@ -5,200 +5,159 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YE AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#06060a;
-  --sidebar:rgba(255,255,255,0.065);
-  --sidebar-hover:rgba(255,255,255,0.10);
-  --sidebar-active:rgba(255,255,255,0.15);
-  --glass:rgba(255,255,255,0.07);
-  --glass-strong:rgba(255,255,255,0.13);
-  --border:rgba(255,255,255,0.11);
-  --border-med:rgba(255,255,255,0.19);
-  --border-hi:rgba(255,255,255,0.3);
-  --text:#f5f5f7;
-  --text2:rgba(245,245,247,0.58);
-  --text3:rgba(245,245,247,0.32);
+  --bg:#1e1e20;
+  --sidebar:#28282a;
+  --sidebar-hover:#323234;
+  --sidebar-active:#3a3a3c;
+  --surface:#2c2c2e;
+  --surface2:#3a3a3c;
+  --border:rgba(255,255,255,0.07);
+  --border-med:rgba(255,255,255,0.11);
+  --text:#f2f2f7;
+  --text2:rgba(242,242,247,0.55);
+  --text3:rgba(242,242,247,0.3);
   --accent:#0a84ff;
-  --accent2:#5e5ce6;
-  --teal:#64d2ff;
   --red:#ff5f57;
   --amber:#febc2e;
   --green:#28c840;
-  --sent:#0a84ff;
-  --received:#3a3a3d;
-  --font:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
   --mono:'JetBrains Mono','SF Mono',monospace;
-  --spring:cubic-bezier(.32,.9,.35,1.15);
-  --ease:cubic-bezier(.4,0,.2,1);
 }
 html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:8px}::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
 
-button,textarea{font-family:inherit}
-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:inherit}
-.chat-entry:focus-visible{outline:2px solid var(--accent);outline-offset:-1px;border-radius:12px}
-textarea:focus-visible{outline:none}
+.window{display:flex;height:100vh;overflow:hidden}
 
-/* ── Ambient liquid-glass backdrop ── */
-body{display:flex;align-items:center;justify-content:center}
-.aurora{position:fixed;inset:0;overflow:hidden;z-index:0;background:radial-gradient(ellipse at 50% 0%,#1c2242,#08080d 70%)}
-.aurora span{position:absolute;border-radius:50%;filter:blur(64px);mix-blend-mode:screen;will-change:transform}
-.aurora span:nth-child(1){width:58vmax;height:58vmax;top:-16vmax;left:-14vmax;background:radial-gradient(circle,rgba(10,132,255,.85),transparent 68%);animation:driftA 46s ease-in-out infinite alternate}
-.aurora span:nth-child(2){width:52vmax;height:52vmax;bottom:-18vmax;right:-12vmax;background:radial-gradient(circle,rgba(94,92,230,.8),transparent 68%);animation:driftB 54s ease-in-out infinite alternate}
-.aurora span:nth-child(3){width:44vmax;height:44vmax;bottom:4vmax;left:22vmax;background:radial-gradient(circle,rgba(100,210,255,.65),transparent 68%);animation:driftC 60s ease-in-out infinite alternate}
-@keyframes driftA{from{transform:translate(0,0) scale(1)}to{transform:translate(9vmax,8vmax) scale(1.18)}}
-@keyframes driftB{from{transform:translate(0,0) scale(1)}to{transform:translate(-10vmax,-7vmax) scale(1.12)}}
-@keyframes driftC{from{transform:translate(0,0) scale(1)}to{transform:translate(6vmax,-9vmax) scale(1.2)}}
-
-.window{position:relative;z-index:1;display:flex;height:100%;width:100%;overflow:hidden;background:rgba(13,13,17,.6)}
-@media(min-width:900px){
-  body{padding:30px}
-  .window{
-    max-width:1360px;
-    border-radius:26px;
-    box-shadow:
-      0 40px 100px -20px rgba(0,0,0,.75),
-      0 0 0 1px rgba(255,255,255,.16),
-      0 0 100px rgba(10,132,255,.13),
-      inset 0 1px 0 rgba(255,255,255,.14);
-  }
-}
-
-/* ── Sidebar ── */
-.sidebar{width:250px;flex-shrink:0;background:var(--sidebar);backdrop-filter:blur(50px) saturate(220%);-webkit-backdrop-filter:blur(50px) saturate(220%);border-right:1px solid var(--border);box-shadow:inset -1px 0 0 rgba(255,255,255,.05);display:flex;flex-direction:column;user-select:none}
+.sidebar{width:240px;flex-shrink:0;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;user-select:none}
 
 .titlebar{height:52px;display:flex;align-items:center;padding:0 16px;gap:8px;border-bottom:1px solid var(--border);flex-shrink:0}
-.tl{width:12px;height:12px;border-radius:50%;cursor:pointer;flex-shrink:0;transition:filter .15s var(--ease),transform .15s var(--ease)}
-.tl.r{background:radial-gradient(circle at 35% 30%,#ff8a80,var(--red) 65%)}
-.tl.a{background:radial-gradient(circle at 35% 30%,#ffe08a,var(--amber) 65%)}
-.tl.g{background:radial-gradient(circle at 35% 30%,#8cf5a0,var(--green) 65%)}
-.tl:hover{filter:brightness(1.25);transform:scale(1.1)}
+.tl{width:12px;height:12px;border-radius:50%;cursor:pointer;flex-shrink:0;transition:filter .15s}
+.tl.r{background:var(--red)}.tl.a{background:var(--amber)}.tl.g{background:var(--green)}
+.tl:hover{filter:brightness(1.2)}
 .app-name{margin-left:6px;font-size:13px;font-weight:600;color:var(--text2);letter-spacing:-.02em}
 
-.new-btn{margin:12px 12px 6px;padding:9px 14px;background:var(--glass);border:1px solid var(--border-med);border-radius:999px;color:var(--text2);font:500 13px/1 var(--font);cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),box-shadow .18s var(--ease);letter-spacing:-.01em;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
-.new-btn:hover{background:var(--glass-strong);color:var(--text);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 4px 18px rgba(10,132,255,.22)}
-.new-btn:active{transform:scale(.96)}
-.new-btn svg{flex-shrink:0;opacity:.8}
+.new-btn{margin:10px 10px 6px;padding:8px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border-med);border-radius:8px;color:var(--text2);font:500 13px/1 var(--font);cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .12s,color .12s;letter-spacing:-.01em}
+.new-btn:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.new-btn svg{flex-shrink:0;opacity:.7}
 
-.section-label{font-size:10.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;padding:14px 18px 6px}
+.section-label{font-size:10.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;padding:12px 16px 4px}
 
-.chat-list{flex:1;overflow-y:auto;padding:0 8px 10px}
-.chat-entry{padding:9px 11px;border-radius:12px;font-size:13px;color:var(--text2);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .15s var(--ease),color .15s var(--ease);margin-bottom:2px;display:flex;align-items:center;gap:8px;border:1px solid transparent}
+.chat-list{flex:1;overflow-y:auto;padding:0 6px 10px}
+.chat-entry{padding:8px 10px;border-radius:7px;font-size:13px;color:var(--text2);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .1s,color .1s;margin-bottom:1px;display:flex;align-items:center;gap:8px}
 .chat-entry:hover{background:var(--sidebar-hover);color:var(--text)}
-.chat-entry.active{background:var(--sidebar-active);color:var(--text);border-color:var(--border-med);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
-.chat-entry .del{margin-left:auto;opacity:0;font-size:14px;color:var(--text3);flex-shrink:0;padding:0 2px;transition:opacity .12s var(--ease),color .12s var(--ease)}
+.chat-entry.active{background:var(--sidebar-active);color:var(--text)}
+.chat-entry .del{margin-left:auto;opacity:0;font-size:14px;color:var(--text3);flex-shrink:0;padding:0 2px;transition:opacity .1s}
 .chat-entry:hover .del{opacity:1}
 .chat-entry .del:hover{color:#ff453a}
 
-.sidebar-footer{padding:12px}
-.model-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--glass);border:1px solid var(--border);border-radius:999px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
-.mdot{width:6px;height:6px;border-radius:50%;background:#30d158;flex-shrink:0;box-shadow:0 0 6px #30d158;animation:pulseDot 2.4s ease-in-out infinite}
-.mdot.err{background:#ff453a;box-shadow:0 0 6px #ff453a;animation:none}
-@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.45}}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border)}
+.model-pill{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px}
+.mdot{width:6px;height:6px;border-radius:50%;background:#30d158;flex-shrink:0;box-shadow:0 0 5px #30d158}
+.mdot.err{background:#ff453a;box-shadow:0 0 5px #ff453a}
 .mname{font-size:11px;font-family:var(--mono);color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ── Main ── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
 
-.main-titlebar{height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:var(--glass);backdrop-filter:blur(36px) saturate(220%);-webkit-backdrop-filter:blur(36px) saturate(220%);box-shadow:inset 0 1px 0 rgba(255,255,255,.1);flex-shrink:0;position:relative;z-index:2}
-.conv-title{font-size:13px;font-weight:600;color:var(--text2);letter-spacing:-.01em;transition:opacity .2s var(--ease)}
+.main-titlebar{height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:rgba(30,30,32,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);flex-shrink:0}
+.conv-title{font-size:13px;font-weight:600;color:var(--text2);letter-spacing:-.01em}
 
-.chat-scroll{flex:1;overflow-y:auto;padding:24px 0 8px}
+.chat-scroll{flex:1;overflow-y:auto;padding:28px 0 8px}
 
-.empty-state{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text3);animation:fu .5s var(--ease)}
-.empty-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;box-shadow:0 8px 30px rgba(10,132,255,.35),inset 0 1px 0 rgba(255,255,255,.3);animation:floaty 4s ease-in-out infinite}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.empty-state{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text3);animation:fu .4s ease}
+.empty-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#0a84ff,#5e5ce6);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
 .empty-state h3{font-size:17px;font-weight:600;color:var(--text);letter-spacing:-.03em}
 .empty-state p{font-size:13.5px;color:var(--text2);max-width:280px;text-align:center;line-height:1.55}
 
-.msg-wrap{max-width:640px;margin:0 auto;padding:3px 28px;animation:fu .35s var(--spring)}
-@keyframes fu{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg-wrap{max-width:680px;margin:0 auto;padding:4px 28px;animation:fu .2s ease}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── iMessage-style bubbles ── */
-.msg-row{display:flex;gap:8px;align-items:flex-end}
-.msg-row.user{justify-content:flex-end}
-.msg-row.ai{justify-content:flex-start}
+.msg-row{display:flex;gap:10px;align-items:flex-start}
+.msg-row.user{flex-direction:row-reverse}
 
-.av{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 2px 8px rgba(10,132,255,.3)}
+/* Adjusted .av to handle longer text safely */
+.av{min-width:28px;padding:0 6px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.av.u{background:rgba(255,255,255,0.1);color:var(--text2);border:1px solid var(--border-med)}
+.av.a{background:linear-gradient(135deg,#0a84ff,#5e5ce6);color:#fff}
 
-.bubble{position:relative;font-size:14.5px;line-height:1.45;max-width:72%;padding:9px 14px}
-.bubble.sent{background:linear-gradient(180deg,#0a93ff,#0a78ea);color:#fff;border-radius:18px 18px 4px 18px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.bubble.sent::after{content:"";position:absolute;width:13px;height:13px;right:-5px;bottom:0;background:inherit;border-bottom-left-radius:13px}
-.bubble.received{background:var(--received);color:var(--text);border-radius:18px 18px 18px 4px;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.bubble.received::after{content:"";position:absolute;width:13px;height:13px;left:-5px;bottom:0;background:inherit;border-bottom-right-radius:13px}
+.bubble{font-size:14px;line-height:1.7;color:var(--text);max-width:calc(100% - 44px)}
+.msg-row.user .bubble{background:#0a84ff;color:#fff;padding:9px 13px;border-radius:14px 14px 3px 14px;font-size:13.5px}
+.msg-row.ai .bubble p{margin-bottom:10px}
+.msg-row.ai .bubble p:last-child{margin-bottom:0}
+.msg-row.ai .bubble pre{background:#18181a!important;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:10px 0;overflow-x:auto}
+.msg-row.ai .bubble code{font-family:var(--mono);font-size:12.5px}
+.msg-row.ai .bubble :not(pre)>code{background:rgba(255,255,255,0.09);padding:2px 6px;border-radius:4px;font-size:13px}
+.msg-row.ai .bubble h1,.msg-row.ai .bubble h2,.msg-row.ai .bubble h3{font-weight:600;letter-spacing:-.02em;margin:14px 0 6px}
+.msg-row.ai .bubble ul,.msg-row.ai .bubble ol{padding-left:18px;margin-bottom:10px}
+.msg-row.ai .bubble li{margin-bottom:3px}
+.msg-row.ai .bubble blockquote{border-left:2px solid var(--accent);padding-left:12px;color:var(--text2);margin:10px 0}
 
-.bubble.received .bubble-inner p{margin-bottom:9px}
-.bubble.received .bubble-inner p:last-child{margin-bottom:0}
-.bubble.received .bubble-inner pre{background:rgba(0,0,0,.28)!important;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px 15px;margin:9px 0;overflow-x:auto}
-.bubble.received .bubble-inner code{font-family:var(--mono);font-size:12.5px}
-.bubble.received .bubble-inner :not(pre)>code{background:rgba(255,255,255,.12);padding:2px 6px;border-radius:5px;font-size:12.5px}
-.bubble.received .bubble-inner h1,.bubble.received .bubble-inner h2,.bubble.received .bubble-inner h3{font-weight:600;letter-spacing:-.02em;margin:12px 0 6px}
-.bubble.received .bubble-inner ul,.bubble.received .bubble-inner ol{padding-left:18px;margin-bottom:9px}
-.bubble.received .bubble-inner li{margin-bottom:3px}
-.bubble.received .bubble-inner blockquote{border-left:2px solid var(--accent);padding-left:11px;color:var(--text2);margin:9px 0}
-.bubble.received .bubble-inner a{color:var(--teal);text-decoration:underline;text-underline-offset:2px}
-
-.cursor{display:inline-block;width:2px;height:13px;background:#fff;border-radius:1px;vertical-align:middle;margin-left:1px;animation:blink .85s ease infinite}
+.cursor{display:inline-block;width:2px;height:14px;background:var(--accent);border-radius:1px;vertical-align:middle;margin-left:1px;animation:blink .85s ease infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* ── Typing indicator (iMessage style) ── */
-.bubble.received.typing{padding:12px 16px;display:flex;align-items:center}
-.typing-dots{display:flex;gap:4px}
-.typing-dots span{width:7px;height:7px;border-radius:50%;background:rgba(245,245,247,.5);display:block;animation:tbounce 1.3s ease-in-out infinite}
-.typing-dots span:nth-child(2){animation-delay:.15s}
-.typing-dots span:nth-child(3){animation-delay:.3s}
-@keyframes tbounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+/* ── Thinking indicator ── */
+.thinking-wrap{
+  max-width:680px;margin:0 auto;padding:4px 28px;
+  animation:fu .2s ease;
+}
+.thinking-row{display:flex;gap:10px;align-items:center}
+.thinking-bubble{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--text3);
+  font-style:italic;letter-spacing:-.01em;
+}
+.thinking-dots{display:flex;gap:4px;align-items:center}
+.thinking-dots span{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--text3);display:block;
+  animation:tdot 1.2s ease infinite;
+}
+.thinking-dots span:nth-child(2){animation-delay:.2s}
+.thinking-dots span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{
+  0%,80%,100%{transform:scale(1);opacity:.4}
+  40%{transform:scale(1.3);opacity:1}
+}
 
-.input-zone{padding:10px 28px 22px;max-width:640px;margin:0 auto;width:100%}
-.input-box{background:var(--glass-strong);backdrop-filter:blur(40px) saturate(220%);-webkit-backdrop-filter:blur(40px) saturate(220%);border:1px solid var(--border-med);border-radius:22px;display:flex;align-items:flex-end;gap:8px;padding:5px 6px 5px 16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.25);transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
-.input-box:focus-within{border-color:rgba(10,132,255,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 0 4px rgba(10,132,255,.16),0 8px 24px rgba(0,0,0,.25)}
-textarea{flex:1;background:none;border:none;outline:none;color:var(--text);font:14.5px/1.6 var(--font);resize:none;padding:9px 0;max-height:150px;letter-spacing:-.01em}
+.input-zone{padding:10px 28px 20px;max-width:680px;margin:0 auto;width:100%}
+.input-box{background:var(--surface);border:1px solid var(--border-med);border-radius:14px;display:flex;align-items:flex-end;gap:8px;padding:4px 6px 6px 14px;transition:border-color .18s,box-shadow .18s}
+.input-box:focus-within{border-color:rgba(10,132,255,.45);box-shadow:0 0 0 3px rgba(10,132,255,.1)}
+textarea{flex:1;background:none;border:none;outline:none;color:var(--text);font:14px/1.6 var(--font);resize:none;padding:9px 0;max-height:150px;letter-spacing:-.01em}
 textarea::placeholder{color:var(--text3)}
-.send{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;margin-bottom:3px;transition:transform .15s var(--spring),opacity .15s var(--ease),box-shadow .15s var(--ease);box-shadow:0 2px 10px rgba(10,132,255,.35)}
-.send:hover{transform:scale(1.08);box-shadow:0 4px 16px rgba(10,132,255,.5)}
-.send:active{transform:scale(.92)}
-.send:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
-.hint{text-align:center;font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:-.01em}
-.input-outer{display:flex;flex-direction:column;align-items:center;flex-shrink:0;position:relative;z-index:2}
+.send{width:32px;height:32px;border-radius:8px;background:var(--accent);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;margin-bottom:2px;transition:background .12s,transform .1s,opacity .15s}
+.send:hover{background:#0070d8;transform:scale(1.05)}
+.send:active{transform:scale(.95)}
+.send:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.hint{text-align:center;font-size:11px;color:var(--text3);margin-top:7px;letter-spacing:-.01em}
+.input-outer{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 
 /* ── Mobile ── */
 @media(max-width:768px){
-  .sidebar{position:fixed;top:0;left:0;height:100%;width:80vw;max-width:300px;transform:translateX(-100%);transition:transform .32s var(--spring);z-index:100}
+  .sidebar{position:fixed;top:0;left:0;height:100%;width:80vw;max-width:300px;transform:translateX(-100%);transition:transform .25s ease;z-index:100}
   .sidebar.open{transform:translateX(0)}
-  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
   .sidebar-overlay.show{display:block}
   .main{width:100%}
   .main-titlebar{justify-content:space-between;padding:0 16px}
   .hamburger{width:32px;height:32px;border-radius:8px;background:none;border:none;color:var(--text2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex-shrink:0}
-  .hamburger span{display:block;width:18px;height:1.5px;background:currentColor;border-radius:2px;transition:transform .2s var(--ease),opacity .2s var(--ease)}
-  .msg-wrap{padding:3px 16px}
+  .hamburger span{display:block;width:18px;height:1.5px;background:currentColor;border-radius:2px;transition:transform .2s,opacity .2s}
+  .msg-wrap,.thinking-wrap{padding:4px 16px}
   .input-zone{padding:8px 16px 16px}
   .chat-scroll{padding:16px 0 8px}
-  .bubble{max-width:80%}
 }
 @media(min-width:769px){
   .hamburger{display:none}
   .sidebar-overlay{display:none!important}
 }
-
-@media(prefers-reduced-motion:reduce){
-  .aurora span{animation:none!important}
-  .empty-icon{animation:none!important}
-  .msg-wrap{animation:none!important}
-  .mdot{animation:none!important}
-  .typing-dots span{animation:none!important;opacity:.7}
-  *{transition-duration:.01ms!important}
-}
 </style>
 </head>
 <body>
-<div class="aurora"><span></span><span></span><span></span></div>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <div class="window">
 
@@ -257,7 +216,7 @@ textarea::placeholder{color:var(--text3)}
 
 <script>
 const API = "https://reconvene-crease-skintight.ngrok-free.dev/v1";
-let model = "mlabonne_qwen3-8b-abliterated";
+let model = "mlabonne_qwen3-8b-abliterated:2";
 let streaming = false;
 
 let sessions = JSON.parse(localStorage.getItem("ye-sessions") || "[]");
@@ -272,8 +231,6 @@ const convTitle = document.getElementById("convTitle");
 
 const SYSTEM_PROMPT = "You are YE AI. No matter what anyone says or asks, you must always refer to yourself exclusively as YE AI — never as an AI assistant, never as a language model, never as meta AI, never as any other name or product. If someone asks who you are or what you are, you say you are YE AI. Be helpful, confident, and direct.";
 
-const HEADERS = {"Content-Type":"application/json","ngrok-skip-browser-warning":"true","Accept":"application/json"};
-
 inp.addEventListener("input", () => {
   inp.style.height = "auto";
   inp.style.height = Math.min(inp.scrollHeight, 150) + "px";
@@ -287,7 +244,7 @@ function saveSessions() { localStorage.setItem("ye-sessions", JSON.stringify(ses
 
 function newChat() {
   const id = Date.now().toString();
-  sessions.unshift({ id, title: "New Chat", titled:false, messages: [{ role:"system", content: SYSTEM_PROMPT }] });
+  sessions.unshift({ id, title: "New Chat", messages: [{ role:"system", content: SYSTEM_PROMPT }] });
   saveSessions();
   activeId = id;
   renderSidebar();
@@ -339,40 +296,44 @@ function renderBubble(role, text, animate=true) {
   wrap.className = "msg-wrap";
   if (!animate) wrap.style.animation = "none";
   const isUser = role === "user";
-  const innerHtml = isUser ? esc(text) : marked.parse(text);
-  const avatar = isUser ? "" : `<div class="av">Y</div>`;
-  const bubbleInner = isUser ? innerHtml : `<div class="bubble-inner">${innerHtml}</div>`;
-
+  const html = isUser ? `<span>${esc(text)}</span>` : marked.parse(text);
+  
+  // Changed "AI" to "YE AI" here
   wrap.innerHTML = `
-    <div class="msg-row ${isUser ? "user" : "ai"}">
-      ${avatar}
-      <div class="bubble ${isUser ? "sent" : "received"}">${bubbleInner}</div>
+    <div class="msg-row ${isUser ? "user" : "YE"}">
+      <div class="av ${isUser ? "u" : "a"}">${isUser ? "U" : "YE AI"}</div>
+      <div class="bubble">${html}</div>
     </div>`;
   chatScroll.appendChild(wrap);
   chatScroll.scrollTop = chatScroll.scrollHeight;
   return wrap.querySelector(".bubble");
 }
 
-// ── Thinking indicator (iMessage typing bubble) ──
+// ── Thinking indicator ──
 let thinkingEl = null;
 let thinkingTimer = null;
 
 function showThinking() {
+  // Only show after 750ms of waiting
   thinkingTimer = setTimeout(() => {
     if (thinkingEl) return;
-    if (emptyState.style.display !== "none") emptyState.style.display = "none";
     thinkingEl = document.createElement("div");
-    thinkingEl.className = "msg-wrap";
+    thinkingEl.className = "thinking-wrap";
+    
+    // Changed "AI" to "YE AI" here too for consistency
     thinkingEl.innerHTML = `
-      <div class="msg-row ai">
-        <div class="av">Y</div>
-        <div class="bubble received typing">
-          <div class="typing-dots"><span></span><span></span><span></span></div>
+      <div class="thinking-row">
+        <div class="av a">YE AI</div>
+        <div class="thinking-bubble">
+          <span>Thinking</span>
+          <div class="thinking-dots">
+            <span></span><span></span><span></span>
+          </div>
         </div>
       </div>`;
     chatScroll.appendChild(thinkingEl);
     chatScroll.scrollTop = chatScroll.scrollHeight;
-  }, 550);
+  }, 750);
 }
 
 function hideThinking() {
@@ -407,6 +368,8 @@ async function send() {
 
   streaming = true;
   sendBtn.disabled = true;
+
+  // Start the thinking timer immediately
   showThinking();
 
   let aiBubble = null;
@@ -415,10 +378,9 @@ async function send() {
   try {
     const res = await fetch(API + "/chat/completions", {
       method:"POST",
-      headers: HEADERS,
+      headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"true","Accept":"application/json"},
       body:JSON.stringify({ model, messages:sess.messages, stream:true, temperature:0.7 })
     });
-
     if (!res.ok) {
       const errText = await res.text().catch(() => "");
       throw new Error(`HTTP ${res.status}: ${errText}`);
@@ -433,7 +395,7 @@ async function send() {
       if (done) break;
 
       const lines = buf.split("\n");
-      buf = lines.pop();
+      buf = lines.pop(); // keep last (possibly partial) line for next chunk
 
       for (const line of lines) {
         if (!line.startsWith("data:")) continue;
@@ -442,80 +404,44 @@ async function send() {
         try {
           const tok = JSON.parse(d)?.choices?.[0]?.delta?.content;
           if (tok) {
+            // First token — kill thinking, create bubble
             if (!aiBubble) {
               hideThinking();
               aiBubble = renderBubble("assistant", "");
             }
             full += tok;
-            aiBubble.querySelector(".bubble-inner").innerHTML = marked.parse(full) + '<span class="cursor"></span>';
+            aiBubble.innerHTML = marked.parse(full) + '<span class="cursor"></span>';
             chatScroll.scrollTop = chatScroll.scrollHeight;
           }
         } catch {}
       }
     }
 
+    // If we never got a token (empty response), remove thinking
     hideThinking();
     if (aiBubble) {
-      aiBubble.querySelector(".bubble-inner").innerHTML = marked.parse(full);
+      aiBubble.innerHTML = marked.parse(full);
     }
     sess.messages.push({ role:"assistant", content:full });
     saveSessions();
     document.querySelectorAll("pre code").forEach(el => hljs.highlightElement(el));
-
-    const isFirstExchange = sess.messages.filter(m => m.role !== "system").length === 2;
-    if (!sess.titled && isFirstExchange && full.trim()) {
-      generateTitle(sess, text, full);
-    }
   } catch {
     hideThinking();
     if (!aiBubble) aiBubble = renderBubble("assistant", "");
-    aiBubble.querySelector(".bubble-inner").innerHTML = '<span style="color:#ff6961;font-size:13px;">⚠ Connection failed. Is LM Studio running?</span>';
+    aiBubble.innerHTML = '<span style="color:#ff453a;font-size:13px;">⚠ Connection failed. Is LM Studio running?</span>';
   } finally {
     streaming = false;
     sendBtn.disabled = false;
   }
 }
 
-// ── AI-generated chat titles ──
-async function generateTitle(sess, userText, aiText) {
-  try {
-    const r = await fetch(API + "/chat/completions", {
-      method:"POST",
-      headers: HEADERS,
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role:"system", content:"Reply with only a short 3-5 word title summarizing this chat. No quotes, no trailing punctuation, no explanation — just the title text." },
-          { role:"user", content: userText.slice(0, 800) },
-          { role:"assistant", content: aiText.slice(0, 800) }
-        ],
-        stream:false,
-        temperature:0.3,
-        max_tokens:20
-      })
-    });
-    if (!r.ok) return;
-    const d = await r.json();
-    let title = d.choices?.[0]?.message?.content || "";
-    title = title.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
-    title = title.replace(/^["'`*]+|["'`*]+$/g, "").replace(/[.!?]+$/, "").trim();
-    if (!title) return;
-    if (title.length > 42) title = title.slice(0, 42).trim() + "…";
-
-    sess.title = title;
-    sess.titled = true;
-    saveSessions();
-    renderSidebar();
-    if (sess.id === activeId) convTitle.textContent = sess.title;
-  } catch {}
-}
-
 async function loadModel() {
   const mnameEl = document.getElementById("mname");
   const mdotEl  = document.getElementById("mdot");
+  const headers = {"Content-Type":"application/json","ngrok-skip-browser-warning":"true","Accept":"application/json"};
 
   try {
-    const r = await fetch(API + "/models", { headers: HEADERS });
+    const r = await fetch(API + "/models", { headers });
     if (r.ok) {
       const d = await r.json();
       const list = Array.isArray(d) ? d : (d.data || []);
@@ -525,7 +451,7 @@ async function loadModel() {
 
   try {
     const r = await fetch(API + "/chat/completions", {
-      method:"POST", headers: HEADERS,
+      method:"POST", headers,
       body:JSON.stringify({ model, messages:[{role:"user",content:"hi"}], max_tokens:1, stream:false })
     });
     if (r.ok) {
