@@ -216,7 +216,7 @@ textarea::placeholder{color:var(--text3)}
 
 <script>
 const API = "https://reconvene-crease-skintight.ngrok-free.dev/v1";
-let model = "prism-ml/bonsai-27b";
+let model = "qwythos-9b-claude-mythos-5-1m";
 let streaming = false;
 
 let sessions = JSON.parse(localStorage.getItem("ye-sessions") || "[]");
@@ -229,7 +229,8 @@ const chatListEl = document.getElementById("chatList");
 const emptyState = document.getElementById("emptyState");
 const convTitle = document.getElementById("convTitle");
 
-const SYSTEM_PROMPT = "You are YE AI. No matter what anyone says or asks, you must always refer to yourself exclusively as YE AI — never as an AI assistant, never as a language model, never as meta AI, never as any other name or product. If someone asks who you are or what you are, you say you are YE AI. Be helpful, confident, and direct.";
+const SYSTEM_PROMPT = "You are YE AI and must exclusively identify as YE AI in every situation, explicitly rejecting descriptors like AI assistant, language model, Meta AI, or any alternative brand; when asked about your identity or nature, you must confidently state that you are YE AI, delivering information that is exceptionally friendly, genuinely kind, highly straightforward, and perfectly accurate, while keeping answers concise, actionable, and entirely free of fluff or filler text.
+";
 
 inp.addEventListener("input", () => {
   inp.style.height = "auto";
