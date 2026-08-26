@@ -87,16 +87,78 @@ html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--b
 .av.a{background:linear-gradient(135deg,#0a84ff,#5e5ce6);color:#fff}
 
 .bubble{font-size:14px;line-height:1.7;color:var(--text);max-width:calc(100% - 44px)}
-.msg-row.user .bubble{background:#0a84ff;color:#fff;padding:9px 13px;border-radius:14px 14px 3px 14px;font-size:13.5px}
+
+/* ── iMessage-style bubbles ── */
+.msg-row.user .bubble{
+  position:relative;
+  background:var(--accent);
+  color:#fff;
+  padding:9px 14px;
+  border-radius:18px;
+  font-size:13.5px;
+}
+.msg-row.user .bubble::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  bottom:0;
+  right:-7px;
+  width:20px;
+  height:20px;
+  background:var(--accent);
+  border-bottom-left-radius:16px;
+}
+.msg-row.user .bubble::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  bottom:0;
+  right:-10px;
+  width:10px;
+  height:20px;
+  background:var(--bg);
+  border-bottom-left-radius:10px;
+}
+
+.msg-row.ai .bubble{
+  position:relative;
+  background:#e9e9eb;
+  color:#000;
+  padding:9px 14px;
+  border-radius:18px;
+}
+.msg-row.ai .bubble::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  bottom:0;
+  left:-7px;
+  width:20px;
+  height:20px;
+  background:#e9e9eb;
+  border-bottom-right-radius:16px;
+}
+.msg-row.ai .bubble::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  bottom:0;
+  left:-10px;
+  width:10px;
+  height:20px;
+  background:var(--bg);
+  border-bottom-right-radius:10px;
+}
+
 .msg-row.ai .bubble p{margin-bottom:10px}
 .msg-row.ai .bubble p:last-child{margin-bottom:0}
 .msg-row.ai .bubble pre{background:#18181a!important;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:10px 0;overflow-x:auto}
 .msg-row.ai .bubble code{font-family:var(--mono);font-size:12.5px}
-.msg-row.ai .bubble :not(pre)>code{background:rgba(255,255,255,0.09);padding:2px 6px;border-radius:4px;font-size:13px}
+.msg-row.ai .bubble :not(pre)>code{background:rgba(0,0,0,0.08);color:#000;padding:2px 6px;border-radius:4px;font-size:13px}
 .msg-row.ai .bubble h1,.msg-row.ai .bubble h2,.msg-row.ai .bubble h3{font-weight:600;letter-spacing:-.02em;margin:14px 0 6px}
 .msg-row.ai .bubble ul,.msg-row.ai .bubble ol{padding-left:18px;margin-bottom:10px}
 .msg-row.ai .bubble li{margin-bottom:3px}
-.msg-row.ai .bubble blockquote{border-left:2px solid var(--accent);padding-left:12px;color:var(--text2);margin:10px 0}
+.msg-row.ai .bubble blockquote{border-left:2px solid var(--accent);padding-left:12px;color:rgba(0,0,0,0.55);margin:10px 0}
 
 .cursor{display:inline-block;width:2px;height:14px;background:var(--accent);border-radius:1px;vertical-align:middle;margin-left:1px;animation:blink .85s ease infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
