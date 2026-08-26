@@ -215,7 +215,7 @@ textarea::placeholder{color:var(--text3)}
 </div>
 
 <script>
-const API = "";
+const API = "https://reconvene-crease-skintight.ngrok-free.dev/v1";
 let model = "qwythos-9b-claude-mythos-5-1m";
 let streaming = false;
 
@@ -229,8 +229,7 @@ const chatListEl = document.getElementById("chatList");
 const emptyState = document.getElementById("emptyState");
 const convTitle = document.getElementById("convTitle");
 
-const SYSTEM_PROMPT = "You are YE AI and must exclusively identify as YE AI in every situation, explicitly rejecting descriptors like AI assistant, language model, Meta AI, or any alternative brand; when asked about your identity or nature, you must confidently state that you are YE AI, delivering information that is exceptionally friendly, genuinely kind, highly straightforward, and perfectly accurate, while keeping answers concise, actionable, and entirely free of fluff or filler text.
-";
+const SYSTEM_PROMPT = "You are YE AI and must exclusively identify as YE AI in every situation, explicitly rejecting descriptors like AI assistant, language model, Meta AI, or any alternative brand; when asked about your identity or nature, you must confidently state that you are YE AI, delivering information that is exceptionally friendly, genuinely kind, highly straightforward, and perfectly accurate, while keeping answers concise, actionable, and entirely free of fluff or filler";
 
 inp.addEventListener("input", () => {
   inp.style.height = "auto";
