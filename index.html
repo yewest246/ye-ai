@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css" id="hljs-dark-theme">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-light-theme" disabled>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -36,6 +37,8 @@
   --bubble-recv-quote:rgba(242,242,247,0.55);
   --scrollbar-thumb:rgba(255,255,255,0.1);
   --titlebar-bg:rgba(30,30,32,.85);
+  --code-bg:#18181a;
+  --code-border:var(--border);
 }
 html[data-theme="gray"]{
   --bg:#3a3a3c; --sidebar:#333335; --sidebar-hover:#404042; --sidebar-active:#48484a;
@@ -45,15 +48,19 @@ html[data-theme="gray"]{
   --bubble-recv-code:rgba(255,255,255,0.12); --bubble-recv-quote:rgba(242,242,242,0.55);
   --scrollbar-thumb:rgba(255,255,255,0.14);
   --titlebar-bg:rgba(51,51,53,.85);
+  --code-bg:#232325;
+  --code-border:rgba(255,255,255,0.1);
 }
 html[data-theme="light"]{
-  --bg:#ffffff; --sidebar:#f5f5f7; --sidebar-hover:#ebebed; --sidebar-active:#e2e2e4;
-  --surface:#f0f0f2; --surface2:#e5e5e7; --border:rgba(0,0,0,0.08); --border-med:rgba(0,0,0,0.12);
+  --bg:#ffffff; --sidebar:#ffffff; --sidebar-hover:#f7f7f8; --sidebar-active:#f0f0f2;
+  --surface:#ffffff; --surface2:#f7f7f8; --border:rgba(0,0,0,0.08); --border-med:rgba(0,0,0,0.12);
   --text:#1c1c1e; --text2:rgba(28,28,30,0.6); --text3:rgba(28,28,30,0.35);
-  --titlebar-bg:rgba(245,245,247,.85);
-  --bubble-recv-bg:#e9e9eb; --bubble-recv-text:#000000;
-  --bubble-recv-code:rgba(0,0,0,0.08); --bubble-recv-quote:rgba(0,0,0,0.55);
+  --titlebar-bg:rgba(255,255,255,.85);
+  --bubble-recv-bg:#f7f7f8; --bubble-recv-text:#000000;
+  --bubble-recv-code:rgba(0,0,0,0.06); --bubble-recv-quote:rgba(0,0,0,0.55);
   --scrollbar-thumb:rgba(0,0,0,0.15);
+  --code-bg:#f6f8fa;
+  --code-border:rgba(0,0,0,0.1);
 }
 html[data-theme="onyx"]{
   --bg:#000000; --sidebar:#000000; --sidebar-hover:#161616; --sidebar-active:#1c1c1c;
@@ -63,6 +70,8 @@ html[data-theme="onyx"]{
   --bubble-recv-code:rgba(255,255,255,0.12); --bubble-recv-quote:rgba(242,242,247,0.55);
   --scrollbar-thumb:rgba(255,255,255,0.1);
   --titlebar-bg:rgba(0,0,0,.85);
+  --code-bg:#0a0a0a;
+  --code-border:rgba(255,255,255,0.1);
 }
 html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border-radius:4px}
@@ -214,8 +223,12 @@ html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--b
 
 .msg-row.ai .bubble p{margin-bottom:10px}
 .msg-row.ai .bubble p:last-child{margin-bottom:0}
-.msg-row.ai .bubble pre{background:#18181a!important;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:10px 0;overflow-x:auto}
+.msg-row.ai .bubble pre{position:relative;background:var(--code-bg);border:1px solid var(--code-border);border-radius:10px;padding:14px 16px;margin:10px 0;overflow-x:auto}
 .msg-row.ai .bubble code{font-family:var(--mono);font-size:12.5px}
+.code-copy-btn{position:absolute;top:8px;right:8px;display:flex;align-items:center;gap:4px;background:var(--surface2);color:var(--text2);border:1px solid var(--border-med);border-radius:6px;padding:4px 8px;font-size:11px;font-family:var(--font);cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.msg-row.ai .bubble pre:hover .code-copy-btn{opacity:1}
+.code-copy-btn:hover{background:var(--sidebar-hover);color:var(--text)}
+.code-copy-btn.copied{color:var(--green);border-color:var(--green)}
 .msg-row.ai .bubble :not(pre)>code{background:var(--bubble-recv-code);color:inherit;padding:2px 6px;border-radius:4px;font-size:13px}
 .msg-row.ai .bubble h1{font-size:16px;font-weight:600;letter-spacing:-.02em;margin:14px 0 6px}
 .msg-row.ai .bubble h2{font-size:15px;font-weight:600;letter-spacing:-.02em;margin:14px 0 6px}
@@ -399,6 +412,11 @@ function applySettings() {
   document.documentElement.setAttribute("data-theme", settings.theme);
   document.body.classList.toggle("no-blur", !settings.blur);
   document.body.classList.toggle("imessage-mode", !!settings.imessage);
+  const isLight = settings.theme === "light";
+  const hljsLight = document.getElementById("hljs-light-theme");
+  const hljsDark = document.getElementById("hljs-dark-theme");
+  if (hljsLight) hljsLight.disabled = !isLight;
+  if (hljsDark) hljsDark.disabled = isLight;
 }
 function saveSettings() { localStorage.setItem("ye-settings", JSON.stringify(settings)); }
 function setTheme(t) { settings.theme = t; saveSettings(); applySettings(); renderSettingsPanel(); }
@@ -485,6 +503,7 @@ function renderChat() {
   emptyState.style.display = "none";
   for (const m of userMsgs) renderBubble(m.role, m.content, false);
   document.querySelectorAll("pre code").forEach(el => hljs.highlightElement(el));
+  enhanceCodeBlocks();
   chatScroll.scrollTop = chatScroll.scrollHeight;
 }
 
@@ -545,6 +564,29 @@ function hideThinking() {
 
 function esc(s) {
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function enhanceCodeBlocks() {
+  document.querySelectorAll(".msg-row.ai .bubble pre").forEach(pre => {
+    if (pre.querySelector(".code-copy-btn")) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "code-copy-btn";
+    btn.textContent = "Copy";
+    btn.addEventListener("click", () => {
+      const codeEl = pre.querySelector("code");
+      const text = codeEl ? codeEl.innerText : pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
+        setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 1500);
+      }).catch(() => {
+        btn.textContent = "Failed";
+        setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+      });
+    });
+    pre.appendChild(btn);
+  });
 }
 
 async function send() {
@@ -623,6 +665,7 @@ async function send() {
     sess.messages.push({ role:"assistant", content:full });
     saveSessions();
     document.querySelectorAll("pre code").forEach(el => hljs.highlightElement(el));
+    enhanceCodeBlocks();
   } catch {
     hideThinking();
     if (!aiBubble) aiBubble = renderBubble("assistant", "");
